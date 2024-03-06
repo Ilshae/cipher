@@ -64,7 +64,7 @@ const App = () => {
   }
 
   return (
-    <Paper sx={{ height: "100vh" }}>
+    <Paper sx={{ minHeight: "100vh", paddingBottom: "40px" }}>
       <Container>
         <Box sx={{ paddingTop: "40px" }}>
           <h1>Pomoc do dziennika Calypso :)</h1>
