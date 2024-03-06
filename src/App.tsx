@@ -17,7 +17,7 @@ const App = () => {
 
     sentences?.forEach((sentence) => {
       shift--
-      if (shift === 4) shift = 11
+      if (shift === 4) shift = 10
       results.push(encode(sentence, shift))
     })
 
@@ -30,7 +30,7 @@ const App = () => {
     const results: string[] = []
     sentences?.forEach((sentence) => {
       shift--
-      if (shift === 4) shift = 11
+      if (shift === 4) shift = 10
       results.push(decode(sentence, shift))
     })
 
