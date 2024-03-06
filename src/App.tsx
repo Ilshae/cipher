@@ -1,59 +1,47 @@
 import { ChangeEvent, useState } from "react"
 import { Button, TextField, Box, Container, Paper } from "@mui/material"
+import { decode, encode } from "./cipher.ts"
 
-const polishAlphabetString =
-  "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźżAĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ"
-
-const polishAlphabetArray = polishAlphabetString.split("")
-
-const shift = 1
+const SENTENCE_END_REGEX = /[^.!?]+[.!?]+/g
 
 const App = () => {
   const [encodedField, setEncodedField] = useState("")
   const [decodedField, setDecodedField] = useState("")
   const [resultField, setResultField] = useState("")
 
-  const encode = () => {
-    const shiftedChars = encodedField
-      .split("")
-      .map((char) => {
-        if (polishAlphabetArray.includes(char)) {
-          const isUpperCase = char === char.toUpperCase()
-          const alphabet = isUpperCase
-            ? polishAlphabetString.toUpperCase()
-            : polishAlphabetString.toLowerCase()
-          const index = alphabet.indexOf(char)
-          const encryptedIndex = (index + shift) % alphabet.length
-          return alphabet[encryptedIndex]
-        } else {
-          return char
-        }
-      })
-      .join("")
-    setResultField(shiftedChars)
+  const handleEncode = () => {
+    let shift = 0
+    const sentences = encodedField.match(SENTENCE_END_REGEX)
+    const results: string[] = []
+
+    sentences?.forEach((sentence) => {
+      shift++
+      results.push(encode(sentence, shift))
+    })
+
+    setResultField(results.join(""))
   }
-  const decode = () => {
-    const shiftedChars = decodedField
-      .split("")
-      .map((char) => {
-        if (polishAlphabetArray.includes(char)) {
-          const isUpperCase = char === char.toUpperCase()
-          const alphabet = isUpperCase
-            ? polishAlphabetString.toUpperCase()
-            : polishAlphabetString.toLowerCase()
-          const index = alphabet.indexOf(char)
-          let decryptedIndex = (index - shift) % alphabet.length
-          // To handle negative shifts, add the alphabet length to the decrypted index
-          if (decryptedIndex < 0) {
-            decryptedIndex += alphabet.length
-          }
-          return alphabet[decryptedIndex]
-        } else {
-          return char
-        }
-      })
-      .join("")
-    setResultField(shiftedChars)
+
+  const handleDecode = () => {
+    let shift = 0
+    const sentences = decodedField.match(SENTENCE_END_REGEX)
+    const results: string[] = []
+    sentences?.forEach((sentence) => {
+      shift++
+      results.push(decode(sentence, shift))
+    })
+
+    setResultField(results.join(""))
+  }
+
+  const handleResults = async () => {
+    const copyText = document.getElementById("results")!.innerHTML
+
+    try {
+      await navigator.clipboard.writeText(copyText)
+    } catch (err) {
+      console.error("Failed to copy: ", err)
+    }
   }
 
   const handleEncodeChange = (
@@ -75,49 +63,60 @@ const App = () => {
   return (
     <Paper sx={{ height: "100vh" }}>
       <Container>
-        <Box sx={{ display: "flex", paddingTop: "70px" }}>
-          <Box sx={{ width: "50%", paddingRight: "20px" }}>
-            <TextField
-              label="Szyfrowanie"
-              placeholder="Wpisz coś..."
-              multiline
-              fullWidth
-              onChange={(event) => handleEncodeChange(event)}
-            />
+        <Box sx={{ paddingTop: "40px" }}>
+          <h1>Pomoc do dziennika Calypso :)</h1>
+          <Box sx={{ display: "flex", paddingTop: "10px" }}>
+            <Box sx={{ width: "50%", paddingRight: "20px" }}>
+              <TextField
+                label="Szyfrowanie"
+                placeholder="Wpisz coś..."
+                multiline
+                fullWidth
+                onChange={(event) => handleEncodeChange(event)}
+              />
 
-            <Button
-              sx={{ marginTop: "20px" }}
-              variant="contained"
-              onClick={encode}
-            >
-              Szyfruj
-            </Button>
-          </Box>
-          <Box sx={{ width: "50%", paddingLeft: "20px" }}>
-            <TextField
-              label="Deszyfrowanie"
-              placeholder="Wpisz coś..."
-              multiline
-              fullWidth
-              onChange={(event) => handleDecodeChange(event)}
-            />
-            <Button
-              sx={{ marginTop: "20px" }}
-              variant="contained"
-              onClick={decode}
-            >
-              Deszyfruj
-            </Button>
+              <Button
+                sx={{ marginTop: "20px" }}
+                variant="contained"
+                onClick={handleEncode}
+              >
+                Szyfruj
+              </Button>
+            </Box>
+            <Box sx={{ width: "50%", paddingLeft: "20px" }}>
+              <TextField
+                label="Deszyfrowanie"
+                placeholder="Wpisz coś..."
+                multiline
+                fullWidth
+                onChange={(event) => handleDecodeChange(event)}
+              />
+              <Button
+                sx={{ marginTop: "20px" }}
+                variant="contained"
+                onClick={handleDecode}
+              >
+                Deszyfruj
+              </Button>
+            </Box>
           </Box>
         </Box>
         <Box sx={{ width: "100%", paddingTop: "70px" }}>
           <TextField
+            id={"results"}
             label="Rezultaty"
             multiline
             fullWidth
             value={resultField}
             disabled
           />
+          <Button
+            sx={{ marginTop: "20px" }}
+            variant="contained"
+            onClick={handleResults}
+          >
+            Kopiuj rezultaty
+          </Button>
         </Box>
       </Container>
     </Paper>
