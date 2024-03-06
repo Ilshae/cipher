@@ -15,11 +15,15 @@ const App = () => {
     const sentences = encodedField.match(SENTENCE_END_REGEX)
     const results: string[] = []
 
-    sentences?.forEach((sentence) => {
-      shift--
-      if (shift === 4) shift = 10
-      results.push(encode(sentence, shift))
-    })
+    if (sentences) {
+      sentences?.forEach((sentence) => {
+        shift--
+        if (shift === 4) shift = 10
+        results.push(encode(sentence, shift))
+      })
+    } else {
+      results.push(encode(decodedField, shift))
+    }
 
     setResultField(results.join(""))
   }
@@ -28,11 +32,16 @@ const App = () => {
     let shift = 11
     const sentences = decodedField.match(SENTENCE_END_REGEX)
     const results: string[] = []
-    sentences?.forEach((sentence) => {
-      shift--
-      if (shift === 4) shift = 10
-      results.push(decode(sentence, shift))
-    })
+
+    if (sentences) {
+      sentences?.forEach((sentence) => {
+        shift--
+        if (shift === 4) shift = 10
+        results.push(decode(sentence, shift))
+      })
+    } else {
+      results.push(decode(decodedField, shift))
+    }
 
     setResultField(results.join(""))
   }
