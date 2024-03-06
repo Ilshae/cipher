@@ -22,7 +22,7 @@ const App = () => {
         results.push(encode(sentence, shift))
       })
     } else {
-      results.push(encode(decodedField, shift))
+      results.push(encode(encodedField, shift))
     }
 
     setResultField(results.join(""))
