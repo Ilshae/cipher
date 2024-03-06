@@ -10,12 +10,13 @@ const App = () => {
   const [resultField, setResultField] = useState("")
 
   const handleEncode = () => {
-    let shift = 14
+    let shift = 35
     const sentences = encodedField.match(SENTENCE_END_REGEX)
     const results: string[] = []
 
     sentences?.forEach((sentence) => {
-      shift++
+      shift--
+      if (shift === 0) shift = 34
       results.push(encode(sentence, shift))
     })
 
@@ -23,11 +24,12 @@ const App = () => {
   }
 
   const handleDecode = () => {
-    let shift = 14
+    let shift = 35
     const sentences = decodedField.match(SENTENCE_END_REGEX)
     const results: string[] = []
     sentences?.forEach((sentence) => {
-      shift++
+      shift--
+      if (shift === 0) shift = 34
       results.push(decode(sentence, shift))
     })
 
