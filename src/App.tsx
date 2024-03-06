@@ -9,7 +9,7 @@ const App = () => {
   const [decodedField, setDecodedField] = useState("")
   const [resultField, setResultField] = useState("")
 
-  // cipher oscilates between keys 10-5
+  // cipher starts at key 10, goes to key 5, then restarts at 10
   const handleEncode = () => {
     let shift = 11
     const sentences = encodedField.match(SENTENCE_END_REGEX)
