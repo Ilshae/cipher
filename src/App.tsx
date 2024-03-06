@@ -22,7 +22,9 @@ const App = () => {
         results.push(encode(sentence, shift))
       })
     } else {
-      results.push(encode(decodedField, shift))
+      shift--
+      if (shift === 4) shift = 10
+      results.push(encode(encodedField, shift))
     }
 
     setResultField(results.join(""))
@@ -40,6 +42,8 @@ const App = () => {
         results.push(decode(sentence, shift))
       })
     } else {
+      shift--
+      if (shift === 4) shift = 10
       results.push(decode(decodedField, shift))
     }
 
