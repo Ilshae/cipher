@@ -1,5 +1,5 @@
-import styled, { createGlobalStyle } from "styled-components"
-import { useState } from "react"
+import { ChangeEvent, useState } from "react"
+import { Button, TextField, Box, Container, Paper } from "@mui/material"
 
 const polishAlphabetString =
   "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźżAĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ"
@@ -56,90 +56,72 @@ const App = () => {
     setResultField(shiftedChars)
   }
 
-  const handleEncodeChange = (event) => {
+  const handleEncodeChange = (
+    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     const { target } = event
     const { value } = target
     setEncodedField(value)
   }
 
-  const handleDecodeChange = (event) => {
+  const handleDecodeChange = (
+    event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     const { target } = event
     const { value } = target
     setDecodedField(value)
   }
 
   return (
-    <GlobalContainer>
-      <GlobalStyle />
+    <Paper sx={{ height: "100vh" }}>
       <Container>
-        <Card>
-          <h2>Szyfrowanie</h2>
-          <textarea
-            id="cipher"
-            rows={10}
-            cols={50}
-            onChange={(event) => handleEncodeChange(event)}
-          ></textarea>
-          <button onClick={encode}>Szyfruj</button>
-        </Card>
-        <Card>
-          <h2>Deszyfrowanie</h2>
-          <textarea
-            id="decipher"
-            rows={10}
-            cols={50}
-            onChange={(event) => handleDecodeChange(event)}
-          ></textarea>
-          <button onClick={decode}>Deszyfruj</button>
-        </Card>
+        <Box sx={{ display: "flex", paddingTop: "70px" }}>
+          <Box sx={{ width: "50%", paddingRight: "20px" }}>
+            <TextField
+              label="Szyfrowanie"
+              placeholder="Wpisz coś..."
+              multiline
+              fullWidth
+              onChange={(event) => handleEncodeChange(event)}
+            />
+
+            <Button
+              sx={{ marginTop: "20px" }}
+              variant="contained"
+              onClick={encode}
+            >
+              Szyfruj
+            </Button>
+          </Box>
+          <Box sx={{ width: "50%", paddingLeft: "20px" }}>
+            <TextField
+              label="Deszyfrowanie"
+              placeholder="Wpisz coś..."
+              multiline
+              fullWidth
+              onChange={(event) => handleDecodeChange(event)}
+            />
+            <Button
+              sx={{ marginTop: "20px" }}
+              variant="contained"
+              onClick={decode}
+            >
+              Deszyfruj
+            </Button>
+          </Box>
+        </Box>
+        <Box sx={{ width: "100%", paddingTop: "70px" }}>
+          <TextField
+            label="Rezultaty"
+            multiline
+            fullWidth
+            value={resultField}
+            disabled
+          />
+        </Box>
       </Container>
-      <Card>
-        <h2>Wynik</h2>
-        <textarea rows={10} cols={50} value={resultField} disabled></textarea>
-      </Card>
-    </GlobalContainer>
+    </Paper>
   )
 }
-
-const GlobalStyle = createGlobalStyle`
-  body {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
-
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-`
-
-const GlobalContainer = styled.div`
-  margin: 0;
-  display: flex;
-  min-width: 320px;
-  flex-direction: column;
-  padding: 16px;
-
-  h1 {
-    font-size: 3.2em;
-    line-height: 1.1;
-  }
-`
-
-const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
-const Card = styled.div`
-  padding: 0 15px;
-  display: flex;
-  flex-direction: column;
-`
 
 export default App
