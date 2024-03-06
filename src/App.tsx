@@ -9,14 +9,15 @@ const App = () => {
   const [decodedField, setDecodedField] = useState("")
   const [resultField, setResultField] = useState("")
 
+  // cipher oscilates between keys 10-5
   const handleEncode = () => {
-    let shift = 35
+    let shift = 11
     const sentences = encodedField.match(SENTENCE_END_REGEX)
     const results: string[] = []
 
     sentences?.forEach((sentence) => {
       shift--
-      if (shift === 0) shift = 34
+      if (shift === 4) shift = 11
       results.push(encode(sentence, shift))
     })
 
@@ -24,12 +25,12 @@ const App = () => {
   }
 
   const handleDecode = () => {
-    let shift = 35
+    let shift = 11
     const sentences = decodedField.match(SENTENCE_END_REGEX)
     const results: string[] = []
     sentences?.forEach((sentence) => {
       shift--
-      if (shift === 0) shift = 34
+      if (shift === 4) shift = 11
       results.push(decode(sentence, shift))
     })
 
